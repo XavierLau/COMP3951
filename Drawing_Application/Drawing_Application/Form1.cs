@@ -22,6 +22,8 @@ namespace Drawing_Application
         Point cursorStart;
         Point cursorEnd;
 
+        Graphics g;
+
         private Color  penColour        = Color.DeepPink;
         private Color  brushColour      = Color.Crimson;
         private Color  backgroundColour = Color.White;
@@ -154,19 +156,33 @@ namespace Drawing_Application
         private void FormMainCanvas_MouseDown(object sender, MouseEventArgs e)
         {
             drawEnabled = true;
-            cursorStart = new Point(Cursor.Position.X, Cursor.Position.Y);
-            this.Refresh();
+            cursorStart = new Point(e.Location.X, e.Location.Y);
+            //this.Refresh();
         }
 
         private void FormMainCanvas_MouseUp(object sender, MouseEventArgs e)
         {
+            if(selectedBrush == "rectangle")
+            {
+                GraphicsPath pathGradient = new GraphicsPath();
+
+                pathGradient.AddRectangle(new Rectangle(cursorStart.X, cursorStart.Y,
+                                                        cursorEnd.X, cursorEnd.Y));
+
+                PathGradientBrush pathGradientBrush = new PathGradientBrush(pathGradient);
+
+                pathGradientBrush.CenterColor = brushColour;
+                pathGradientBrush.SurroundColors = new Color[] { penColour };
+
+                g.FillRectangle(pathGradientBrush, cursorStart.X, cursorStart.Y,
+                                                   cursorEnd.X, cursorEnd.Y);
+            }
             drawEnabled = false;
-            cursorEnd = new Point(Cursor.Position.X, Cursor.Position.Y);
         }
 
         private void FormMainCanvas_Paint(object sender, PaintEventArgs e)
         {
-            Graphics g = e.Graphics;
+            g = e.Graphics;
 
             if (drawEnabled)
             {
@@ -176,30 +192,56 @@ namespace Drawing_Application
 
                         //draw lines connecting points (4 lines total)
 
-                        //fill in the lines with a rectangle
+                        Pen outlinePen = new Pen(penColour);
+
+                        g = this.CreateGraphics();
+
+                        // Two Horizontal lines from start to end positions.
+                        g.DrawLine(outlinePen, cursorStart.X, cursorStart.Y, cursorEnd.X, cursorStart.Y);
+                        g.DrawLine(outlinePen, cursorStart.X, cursorEnd.Y, cursorEnd.X, cursorEnd.Y);
+                        // Two Vertical lines from start to end positions.
+                        g.DrawLine(outlinePen, cursorStart.X, cursorStart.Y, cursorStart.X, cursorEnd.Y);
+                        g.DrawLine(outlinePen, cursorEnd.X, cursorStart.Y, cursorEnd.X, cursorEnd.Y);
 
                         break;
                     case "circle":
+
+                        GraphicsPath pathGradientCircle = new GraphicsPath();
+
+                        pathGradientCircle.AddEllipse(new Rectangle(cursorStart.X, cursorStart.Y,
+                                                                SHAPE_BOUNDS_IN, SHAPE_BOUNDS_IN));
+
+                        PathGradientBrush pathGradientBrushCircle = new PathGradientBrush(pathGradientCircle);
+
+                        pathGradientBrushCircle.CenterColor = brushColour;
+                        pathGradientBrushCircle.SurroundColors = new Color[] { penColour };
+
+                        e.Graphics.FillEllipse(pathGradientBrushCircle, cursorStart.X, cursorStart.Y,
+                                                                    SHAPE_BOUNDS_IN, SHAPE_BOUNDS_IN);
                         // draw brush method with circle parameter
                         break;
                     case "square":
-                        GraphicsPath pathGradient = new GraphicsPath();
+                        GraphicsPath pathGradientSquare = new GraphicsPath();
 
-                        pathGradient.AddRectangle(new Rectangle(Cursor.Position.X, Cursor.Position.Y,
+                        pathGradientSquare.AddRectangle(new Rectangle(cursorStart.X, cursorStart.Y,
                                                                 SHAPE_BOUNDS_IN, SHAPE_BOUNDS_IN));
 
-                        PathGradientBrush pathGradientBrush = new PathGradientBrush(pathGradient);
+                        PathGradientBrush pathGradientBrushSquare = new PathGradientBrush(pathGradientSquare);
 
-                        pathGradientBrush.CenterColor       = brushColour;
-                        pathGradientBrush.SurroundColors    = new Color[] { penColour };
+                        pathGradientBrushSquare.CenterColor       = brushColour;
+                        pathGradientBrushSquare.SurroundColors    = new Color[] { penColour };
 
-                        e.Graphics.FillRectangle(pathGradientBrush, Cursor.Position.X, Cursor.Position.Y, 
+                        e.Graphics.FillRectangle(pathGradientBrushSquare, cursorStart.X, cursorStart.Y, 
                                                                     SHAPE_BOUNDS_OUT, SHAPE_BOUNDS_OUT);
 
                         // draw brush method with square parameter
                         break;
                     case "scribble":
-                        // draw brush method with scribble parameter
+                        GraphicsPath pathGradientBrushScrib = new GraphicsPath();
+
+                        pathGradientBrushScrib.AddRectangle(new Rectangle(cursorStart.X, cursorStart.Y,
+                                                                5, 5));
+                            
                         break;
                     default:
                         // Do not draw anything.
@@ -211,7 +253,8 @@ namespace Drawing_Application
 
         private void FormMainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            this.Invalidate();
+            cursorEnd = new Point(e.Location.X, e.Location.Y);
+            //this.Refresh();
         }
     }
 }
