@@ -156,13 +156,16 @@ namespace Drawing_Application
         {
             if (selectedBrush == "rectangle")
             {
-                drawRect();
+                if (!drawRect())
+                {
+                    MessageBox.Show("Draw Within the Form.");
+                }
             }
             drawEnabled = false;
         }
 
         private void FormMainCanvas_Paint(object sender, PaintEventArgs e)
-        { 
+        {
 
         }
 
@@ -180,10 +183,10 @@ namespace Drawing_Application
 
                         //draw lines connecting points (4 lines total)
 
-                        Pen outlinePen = new Pen(penColour, 2);
+                        Pen outlinePen = new Pen(penColour, 1);
 
                         g = this.CreateGraphics();
-
+                        Refresh();
                         // Two Horizontal lines from start to end positions.
                         g.DrawLine(outlinePen, cursorStart.X, cursorStart.Y, cursorEnd.X, cursorStart.Y);
                         g.DrawLine(outlinePen, cursorStart.X, cursorEnd.Y, cursorEnd.X, cursorEnd.Y);
@@ -227,7 +230,7 @@ namespace Drawing_Application
                         outlineScrib = new Pen(penColour, 2);
 
                         g.DrawLine(outlineScrib, cursorEnd.X, cursorEnd.Y, cursorEnd.X - 1, cursorEnd.Y - 1);
-                            
+
                         break;
                     default:
                         // Do not draw anything.
@@ -236,78 +239,80 @@ namespace Drawing_Application
             }
         }
 
-        public void drawRect()
+        public bool drawRect()
         {
             GraphicsPath pathGradient = new GraphicsPath();
 
+            if(cursorEnd.X < 0 || cursorEnd.Y < 0 || cursorEnd.X > this.Size.Width || cursorEnd.Y > this.Size.Height)
+            {
+                return false;
+            }
+
             if (cursorStart.X > cursorEnd.X && cursorStart.Y > cursorEnd.Y) // Draw Left and UP
             {
-                
-                pathGradient.AddRectangle(new Rectangle(cursorStart.X, cursorStart.Y,
-                                                        cursorEnd.X, cursorEnd.Y));
+                pathGradient.AddRectangle(new Rectangle(cursorEnd.X, cursorEnd.Y,
+                                                        cursorStart.X - cursorEnd.X, cursorStart.Y - cursorEnd.Y));
 
                 PathGradientBrush pathGradientBrush = new PathGradientBrush(pathGradient);
 
                 pathGradientBrush.CenterColor = brushColour;
                 pathGradientBrush.SurroundColors = new Color[] { penColour };
-
-
-
-                g.FillRectangle(pathGradientBrush, cursorStart.X, cursorStart.Y,
-                                                   cursorStart.X - cursorEnd.X, cursorStart.Y - cursorEnd.Y);
-                MessageBox.Show("Draw Left and UP?");
+                
+                g.FillRectangle(pathGradientBrush, cursorEnd.X, cursorEnd.Y,
+                                                        cursorStart.X - cursorEnd.X, cursorStart.Y - cursorEnd.Y);
             }
             else if (cursorStart.X > cursorEnd.X && cursorStart.Y < cursorEnd.Y) // Draw Left and DOWN
             {
                 
-                pathGradient.AddRectangle(new Rectangle(cursorStart.X - (cursorStart.X - cursorEnd.X), cursorStart.Y,
-                                                        cursorEnd.X, cursorEnd.Y));
+                pathGradient.AddRectangle(new Rectangle(cursorEnd.X, cursorStart.Y,
+                                                        cursorStart.X - cursorEnd.X, cursorEnd.Y - cursorStart.Y));
 
                 PathGradientBrush pathGradientBrush = new PathGradientBrush(pathGradient);
 
                 pathGradientBrush.CenterColor = brushColour;
                 pathGradientBrush.SurroundColors = new Color[] { penColour };
-
-
-
-                g.FillRectangle(pathGradientBrush, cursorStart.X - (cursorStart.X - cursorEnd.X), cursorStart.Y,
-                                                   cursorStart.X - cursorEnd.X, cursorEnd.Y - cursorStart.Y);
-                MessageBox.Show("Draw Left and DOWN?");
+                
+                g.FillRectangle(pathGradientBrush, cursorEnd.X, cursorStart.Y,
+                                                        cursorStart.X - cursorEnd.X, cursorEnd.Y - cursorStart.Y);
             }
             else if (cursorStart.X < cursorEnd.X && cursorStart.Y > cursorEnd.Y) // Draw Right and UP
             {
                 
-                pathGradient.AddRectangle(new Rectangle(cursorStart.X, cursorStart.Y,
-                                                        cursorEnd.X, cursorEnd.Y));
+                pathGradient.AddRectangle(new Rectangle(cursorStart.X, cursorEnd.Y,
+                                                        cursorEnd.X - cursorStart.X, cursorStart.Y - cursorEnd.Y));
 
                 PathGradientBrush pathGradientBrush = new PathGradientBrush(pathGradient);
 
                 pathGradientBrush.CenterColor = brushColour;
                 pathGradientBrush.SurroundColors = new Color[] { penColour };
-
-
-
-                g.FillRectangle(pathGradientBrush, cursorStart.X, cursorStart.Y,
-                                                   cursorEnd.X - cursorStart.X, cursorStart.Y - cursorEnd.Y);
-                MessageBox.Show("Draw Right and UP?");
+                
+                g.FillRectangle(pathGradientBrush, cursorStart.X, cursorEnd.Y,
+                                                        cursorEnd.X - cursorStart.X, cursorStart.Y - cursorEnd.Y);
             }
             else if (cursorStart.X < cursorEnd.X && cursorStart.Y < cursorEnd.Y) // Draw Right and DOWN
             {
-                // Minus certain numbers to get the correct rect dimensions.
                 pathGradient.AddRectangle(new Rectangle(cursorStart.X, cursorStart.Y,
-                                                        cursorEnd.X, cursorEnd.Y));
+                                                        cursorEnd.X - cursorStart.X, cursorEnd.Y - cursorStart.Y));
 
                 PathGradientBrush pathGradientBrush = new PathGradientBrush(pathGradient);
 
                 pathGradientBrush.CenterColor = brushColour;
                 pathGradientBrush.SurroundColors = new Color[] { penColour };
-
-
-                // Minus certain numbers to get the correct rect dimensions.
+                
                 g.FillRectangle(pathGradientBrush, cursorStart.X, cursorStart.Y,
-                                                   cursorEnd.X - cursorStart.X, cursorEnd.Y - cursorStart.Y);
-                MessageBox.Show("Draw Right and DOWN?");
+                                                        cursorEnd.X - cursorStart.X, cursorEnd.Y - cursorStart.Y);
             }
+            return true;
+        }
+
+        private void FormMainCanvas_BackColorChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FormMainCanvas_SizeChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
