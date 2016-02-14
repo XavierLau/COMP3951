@@ -180,6 +180,7 @@
             this.BackColor = System.Drawing.SystemColors.HighlightText;
             this.ClientSize = new System.Drawing.Size(394, 354);
             this.Controls.Add(this.menuStrip1);
+            this.DoubleBuffered = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMainCanvas";
             this.Text = "Connor and Xavier\'s Magical Colour Application";

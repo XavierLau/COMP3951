@@ -15,6 +15,7 @@ namespace Drawing_Application
     {
         private bool   drawEnabled      = false;
         private string selectedBrush    = "square";
+        private List<Point> pointList = new List<Point>();
 
         private const int SHAPE_BOUNDS_IN  = 50;
         private const int SHAPE_BOUNDS_OUT = 75;
@@ -166,7 +167,13 @@ namespace Drawing_Application
 
         private void FormMainCanvas_Paint(object sender, PaintEventArgs e)
         {
-
+            if (pointList.Count > 1)
+            {
+                using (Pen pen = new Pen(Color.Black, 1))
+                {
+                    e.Graphics.DrawLines(pen, pointList.ToArray());
+                }
+            }
         }
 
         private void FormMainCanvas_MouseMove(object sender, MouseEventArgs e)
@@ -227,9 +234,16 @@ namespace Drawing_Application
                         break;
                     case "scribble":
 
-                        outlineScrib = new Pen(penColour, 2);
+                        //outlineScrib = new Pen(penColour, 2);
 
-                        g.DrawLine(outlineScrib, cursorEnd.X, cursorEnd.Y, cursorEnd.X - 1, cursorEnd.Y - 1);
+                        //g.DrawLine(outlineScrib, cursorEnd.X, cursorEnd.Y, cursorEnd.X - 1, cursorEnd.Y - 1);
+
+                        if (drawEnabled)
+                        {
+                            drawEnabled = true;
+                            pointList.Add(e.Location);
+                            Invalidate();
+                        }
 
                         break;
                     default:
