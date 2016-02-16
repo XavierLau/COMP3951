@@ -73,6 +73,7 @@ namespace Drawing_Application
 
                 ColorDialog colourPicker      = new ColorDialog();
 
+                // Looks for what colour was picked in each dropdown.
                 switch (clickedTool.Name)
                 {
                     case "backgroundColourToolStripMenuItem":
@@ -175,11 +176,12 @@ namespace Drawing_Application
         {
             if (selectedBrush == "rectangle")
             {
-                if (!drawRect())
+                if (!drawRect()) //Tried to draw outsid the bounds.
                 {
                     MessageBox.Show("Draw Within the Form.");
                 }
             }
+            // Finished drawing. Reset variables.
             pointX = null;
             pointY = null;
             drawEnabled = false;
@@ -202,8 +204,6 @@ namespace Drawing_Application
                 {
                     case "rectangle":
 
-                        //draw lines connecting points (4 lines total)
-
                         Pen outlinePen = new Pen(penColour, 1);
 
                         g = this.CreateGraphics();
@@ -219,12 +219,13 @@ namespace Drawing_Application
 
                         break;
                     case "circle":
-
+                        // Create a GraphicsPath to hold the outline of the rectangle.
                         GraphicsPath pathGradientCircle = new GraphicsPath();
 
                         pathGradientCircle.AddRectangle(new Rectangle(cursorEnd.X, cursorEnd.Y,
                                                                 SHAPE_BOUNDS_IN, SHAPE_BOUNDS_IN));
 
+                        // Create PathGradientBrush to fill a circle with a rectangle gradient inside., with selected colours.
                         PathGradientBrush pathGradientBrushCircle = new PathGradientBrush(pathGradientCircle);
 
                         pathGradientBrushCircle.CenterColor = brushColour;
@@ -234,11 +235,13 @@ namespace Drawing_Application
                                                                     SHAPE_BOUNDS_IN, SHAPE_BOUNDS_IN);
                         break;
                     case "square":
+                        // Create a GraphicsPath to hold the outline of the rectangle.
                         GraphicsPath pathGradientSquare = new GraphicsPath();
 
                         pathGradientSquare.AddRectangle(new Rectangle(cursorEnd.X, cursorEnd.Y,
                                                                 SHAPE_BOUNDS_IN, SHAPE_BOUNDS_IN));
 
+                        // Create PathGradientBrush to fill in the outline of previous rectangle, with selected colours.
                         PathGradientBrush pathGradientBrushSquare = new PathGradientBrush(pathGradientSquare);
 
                         pathGradientBrushSquare.CenterColor = brushColour;
@@ -252,6 +255,7 @@ namespace Drawing_Application
 
                         outlineScrib = new Pen(penColour, 2);
 
+                        // If null set points to correct values. Draw lines.
                         g.DrawLine(outlineScrib, new Point(pointX ?? e.X, pointY ?? e.Y), new Point(e.X, e.Y));
                         pointX = e.X;
                         pointY = e.Y;
@@ -267,15 +271,19 @@ namespace Drawing_Application
         /// <summary>
         /// Draws a rubberbanding rectangle.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// If true, draw Rectangle of Form.
+        /// </returns>
         public bool drawRect()
         {
             GraphicsPath pathGradient = new GraphicsPath();
 
+            /*
             if(cursorEnd.X < 0 || cursorEnd.Y < 0 || cursorEnd.X > this.Size.Width || cursorEnd.Y > this.Size.Height)
             {
-               // return false;
+               return false;
             }
+            */
 
             if (cursorStart.X > cursorEnd.X && cursorStart.Y > cursorEnd.Y) // Draw Left and UP
             {

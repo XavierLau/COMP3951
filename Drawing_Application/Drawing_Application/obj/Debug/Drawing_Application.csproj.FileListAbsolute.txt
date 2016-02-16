@@ -16,3 +16,12 @@ C:\Users\Xavier Lau\Desktop\Workplace\Drawing_Application\Drawing_Application\ob
 C:\Users\Xavier Lau\Desktop\Workplace\Drawing_Application\Drawing_Application\obj\Debug\Drawing_Application.FormMainCanvas.resources
 C:\Users\Xavier Lau\Desktop\Workplace\Drawing_Application\Drawing_Application\obj\Debug\Drawing_Application.Properties.Resources.resources
 C:\Users\Xavier Lau\Desktop\Workplace\Drawing_Application\Drawing_Application\obj\Debug\Drawing_Application.csproj.GenerateResource.Cache
+C:\Users\Connor Phalen\Desktop\Fun&Games\Drawing_Application\Drawing_Application\bin\Debug\Drawing_Application.exe.config
+C:\Users\Connor Phalen\Desktop\Fun&Games\Drawing_Application\Drawing_Application\obj\Debug\Drawing_Application.exe
+C:\Users\Connor Phalen\Desktop\Fun&Games\Drawing_Application\Drawing_Application\obj\Debug\Drawing_Application.pdb
+C:\Users\Connor Phalen\Desktop\Fun&Games\Drawing_Application\Drawing_Application\bin\Debug\Drawing_Application.exe
+C:\Users\Connor Phalen\Desktop\Fun&Games\Drawing_Application\Drawing_Application\bin\Debug\Drawing_Application.pdb
+C:\Users\Connor Phalen\Desktop\Fun&Games\Drawing_Application\Drawing_Application\obj\Debug\Drawing_Application.csprojResolveAssemblyReference.cache
+C:\Users\Connor Phalen\Desktop\Fun&Games\Drawing_Application\Drawing_Application\obj\Debug\Drawing_Application.FormMainCanvas.resources
+C:\Users\Connor Phalen\Desktop\Fun&Games\Drawing_Application\Drawing_Application\obj\Debug\Drawing_Application.Properties.Resources.resources
+C:\Users\Connor Phalen\Desktop\Fun&Games\Drawing_Application\Drawing_Application\obj\Debug\Drawing_Application.csproj.GenerateResource.Cache
