@@ -27,8 +27,8 @@ namespace Drawing_Application
 
         Graphics g;
 
-        private Color  penColour        = Color.DeepPink;
-        private Color  brushColour      = Color.Crimson;
+        private Color  penColour        = Color.Blue;
+        private Color  brushColour      = Color.DarkOrange;
         private Color  backgroundColour = Color.White;
         
         public FormMainCanvas()
@@ -38,6 +38,7 @@ namespace Drawing_Application
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            g.Dispose();
             this.Close();
         }
 
@@ -169,7 +170,7 @@ namespace Drawing_Application
         {
             if (pointList.Count > 1)
             {
-                using (Pen pen = new Pen(Color.Black, 1))
+                using (Pen pen = new Pen(penColour, 1))
                 {
                     e.Graphics.DrawLines(pen, pointList.ToArray());
                 }
@@ -193,7 +194,9 @@ namespace Drawing_Application
                         Pen outlinePen = new Pen(penColour, 1);
 
                         g = this.CreateGraphics();
+
                         Refresh();
+
                         // Two Horizontal lines from start to end positions.
                         g.DrawLine(outlinePen, cursorStart.X, cursorStart.Y, cursorEnd.X, cursorStart.Y);
                         g.DrawLine(outlinePen, cursorStart.X, cursorEnd.Y, cursorEnd.X, cursorEnd.Y);
@@ -206,7 +209,7 @@ namespace Drawing_Application
 
                         GraphicsPath pathGradientCircle = new GraphicsPath();
 
-                        pathGradientCircle.AddEllipse(new Rectangle(cursorEnd.X, cursorEnd.Y,
+                        pathGradientCircle.AddRectangle(new Rectangle(cursorEnd.X, cursorEnd.Y,
                                                                 SHAPE_BOUNDS_IN, SHAPE_BOUNDS_IN));
 
                         PathGradientBrush pathGradientBrushCircle = new PathGradientBrush(pathGradientCircle);
@@ -234,16 +237,10 @@ namespace Drawing_Application
                         break;
                     case "scribble":
 
-                        //outlineScrib = new Pen(penColour, 2);
+                        outlineScrib = new Pen(penColour, 2);
 
-                        //g.DrawLine(outlineScrib, cursorEnd.X, cursorEnd.Y, cursorEnd.X - 1, cursorEnd.Y - 1);
-
-                        if (drawEnabled)
-                        {
-                            drawEnabled = true;
-                            pointList.Add(e.Location);
-                            Invalidate();
-                        }
+                        pointList.Add(e.Location);
+                        Invalidate();
 
                         break;
                     default:
@@ -259,7 +256,7 @@ namespace Drawing_Application
 
             if(cursorEnd.X < 0 || cursorEnd.Y < 0 || cursorEnd.X > this.Size.Width || cursorEnd.Y > this.Size.Height)
             {
-                return false;
+               // return false;
             }
 
             if (cursorStart.X > cursorEnd.X && cursorStart.Y > cursorEnd.Y) // Draw Left and UP
@@ -319,14 +316,9 @@ namespace Drawing_Application
             return true;
         }
 
-        private void FormMainCanvas_BackColorChanged(object sender, EventArgs e)
+        private void FormMainCanvas_FormClosed(object sender, FormClosedEventArgs e)
         {
-
-        }
-
-        private void FormMainCanvas_SizeChanged(object sender, EventArgs e)
-        {
-
+            g.Dispose();
         }
     }
 }

@@ -184,8 +184,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMainCanvas";
             this.Text = "Connor and Xavier\'s Magical Colour Application";
-            this.BackColorChanged += new System.EventHandler(this.FormMainCanvas_BackColorChanged);
-            this.SizeChanged += new System.EventHandler(this.FormMainCanvas_SizeChanged);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMainCanvas_FormClosed);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.FormMainCanvas_Paint);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FormMainCanvas_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FormMainCanvas_MouseMove);
