@@ -11,11 +11,15 @@ using System.Windows.Forms;
 
 namespace Drawing_Application
 {
+    /// <summary>
+    /// A paint application used to draw lines, shapes, with capabilities to change outline colours and gradients.
+    /// </summary>
     public partial class FormMainCanvas : Form
     {
         private bool   drawEnabled      = false;
         private string selectedBrush    = "square";
-        private List<Point> pointList = new List<Point>();
+        private int? pointX = null;
+        private int? pointY = null;
 
         private const int SHAPE_BOUNDS_IN  = 50;
         private const int SHAPE_BOUNDS_OUT = 75;
@@ -31,15 +35,23 @@ namespace Drawing_Application
         private Color  brushColour      = Color.DarkOrange;
         private Color  backgroundColour = Color.White;
         
+        /// <summary>
+        /// Initializes the components of the form.
+        /// </summary>
         public FormMainCanvas()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Disposes the graphics object when the exit menu button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             g.Dispose();
-            this.Close();
+            Close();
         }
 
         /// <summary>
@@ -146,6 +158,11 @@ namespace Drawing_Application
             }
         }
 
+        /// <summary>
+        /// Starts a new drawing action.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormMainCanvas_MouseDown(object sender, MouseEventArgs e)
         {
             drawEnabled = true;
@@ -163,20 +180,16 @@ namespace Drawing_Application
                     MessageBox.Show("Draw Within the Form.");
                 }
             }
+            pointX = null;
+            pointY = null;
             drawEnabled = false;
         }
 
-        private void FormMainCanvas_Paint(object sender, PaintEventArgs e)
-        {
-            if (pointList.Count > 1)
-            {
-                using (Pen pen = new Pen(penColour, 1))
-                {
-                    e.Graphics.DrawLines(pen, pointList.ToArray());
-                }
-            }
-        }
-
+        /// <summary>
+        /// When triggered, performs the actual drawing on the graphics object.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormMainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
             cursorEnd = new Point(e.Location.X, e.Location.Y);
@@ -239,8 +252,9 @@ namespace Drawing_Application
 
                         outlineScrib = new Pen(penColour, 2);
 
-                        pointList.Add(e.Location);
-                        Invalidate();
+                        g.DrawLine(outlineScrib, new Point(pointX ?? e.X, pointY ?? e.Y), new Point(e.X, e.Y));
+                        pointX = e.X;
+                        pointY = e.Y;
 
                         break;
                     default:
@@ -250,6 +264,10 @@ namespace Drawing_Application
             }
         }
 
+        /// <summary>
+        /// Draws a rubberbanding rectangle.
+        /// </summary>
+        /// <returns></returns>
         public bool drawRect()
         {
             GraphicsPath pathGradient = new GraphicsPath();
@@ -316,6 +334,11 @@ namespace Drawing_Application
             return true;
         }
 
+        /// <summary>
+        /// Disposes of the graphics object when the form closes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormMainCanvas_FormClosed(object sender, FormClosedEventArgs e)
         {
             g.Dispose();

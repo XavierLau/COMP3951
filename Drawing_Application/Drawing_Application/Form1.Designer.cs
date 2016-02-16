@@ -185,7 +185,6 @@
             this.Name = "FormMainCanvas";
             this.Text = "Connor and Xavier\'s Magical Colour Application";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMainCanvas_FormClosed);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.FormMainCanvas_Paint);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FormMainCanvas_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FormMainCanvas_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FormMainCanvas_MouseUp);
